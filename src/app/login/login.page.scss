@@ -46,12 +46,7 @@ ion-button {
   font-size: 14px;
 }
 
-.terminos-content {
-  padding: 20px;
-  background-color: #1e1e1e; 
-  color: white;
-  font-size: 15px;
-}
+
 
 .terminos-texto h2 {
   font-size: 18px;
@@ -77,3 +72,49 @@ ion-button {
 }
 
 
+ion-modal::part(content) {
+  --background: #1e1e1e;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+ion-toolbar {
+  --background: #eb445a;
+  --color: white;
+}
+
+ion-title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+ion-buttons[slot="end"] {
+  margin-left: auto;
+}
+
+ion-buttons[slot="end"] ion-button {
+  padding-right: 0;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+}
+
+.ion-padding {
+  padding: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: white;
+}
+
+.ion-padding h2 {
+  color: #eb445a;
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.ion-padding p {
+  margin-bottom: 16px;
+  text-align: justify;
+}
