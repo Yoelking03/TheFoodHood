@@ -1,0 +1,46 @@
+<ion-content class="shared-background">
+  <div class="logo-container">
+    <img src="assets/img/logo.png" class="logo-img" />
+  </div>
+
+  <h1 class="login-title">Create new Account</h1>
+
+  <ion-item class="custom-input">
+    <ion-label>Tipo de usuario</ion-label>
+    <ion-select [(ngModel)]="tipo_usuario">
+      <ion-select-option value="cliente">Cliente</ion-select-option>
+      <ion-select-option value="administrador">Administrador</ion-select-option>
+    </ion-select>
+  </ion-item>
+  
+
+  <ion-item class="custom-input">
+    <ion-label position="floating">Name</ion-label>
+    <ion-input [(ngModel)]="nombre"></ion-input>
+  </ion-item>
+
+  <ion-item class="custom-input">
+    <ion-label position="floating">Email</ion-label>
+    <ion-input [(ngModel)]="correo" type="email"></ion-input>
+  </ion-item>
+
+  <ion-item class="custom-input">
+    <ion-label position="floating">Password</ion-label>
+    <ion-input [(ngModel)]="contrasena" type="password"></ion-input>
+  </ion-item>
+
+  <ion-item class="custom-input">
+    <ion-label position="floating">Teléfono</ion-label>
+    <ion-input [(ngModel)]="telefono"></ion-input>
+  </ion-item>
+
+  <ion-item class="custom-input">
+    <ion-label position="floating">Dirección</ion-label>
+    <ion-input [(ngModel)]="direccion"></ion-input>
+  </ion-item>
+
+  
+
+  <ion-button expand="block" color="danger" (click)="registrar()">Sign up</ion-button>
+  <ion-button expand="block" color="danger" [routerLink]="['/login']">Atrás</ion-button>
+</ion-content>

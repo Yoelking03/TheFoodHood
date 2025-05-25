@@ -35,3 +35,20 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+@import "./theme/variables";
+
+
+.shared-background {
+  --background: none;
+  background: url('/assets/img/bg-dark.png') center;
+  color: rgb(0, 0, 0);
+}
+
+.full-bg {
+  background-image: url('/assets/img/bg-dark.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed; 
+  background-size: contain;     
+  background-color: black;      
+}
