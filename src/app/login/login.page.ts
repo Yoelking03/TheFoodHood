@@ -12,6 +12,7 @@ import supabase from '../services/supabaseClient';
 export class LoginPage {
   correo: string = '';
   contrasena: string = '';
+  mostrarModal = false;
 
   constructor(
     private router: Router,
@@ -73,5 +74,12 @@ export class LoginPage {
       position: 'bottom',
     });
     await toast.present();
+  }
+  abrirModal() {
+  this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
   }
 }
