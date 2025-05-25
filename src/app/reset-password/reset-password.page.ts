@@ -39,7 +39,7 @@ export class ResetPasswordPage implements OnInit {
   async enviarRecuperacion() {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(this.correo, {
-        redirectTo: 'http://localhost:8100/reset-password' // ⚠️ cambia si estás en producción
+        redirectTo: 'https://the-food-hood.vercel.app/reset-password' // ⚠️ cambia si estás en producción
       });
 
       if (error) throw error;
