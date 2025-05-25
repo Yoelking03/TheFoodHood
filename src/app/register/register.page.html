@@ -3,7 +3,7 @@
     <img src="assets/img/logo.png" class="logo-img" />
   </div>
 
-  <h1 class="login-title">Create new Account</h1>
+  <h1 class="login-title">Crear Nueva Cuenta</h1>
 
   <ion-item class="custom-input">
     <ion-label>Tipo de usuario</ion-label>
@@ -15,17 +15,17 @@
   
 
   <ion-item class="custom-input">
-    <ion-label position="floating">Name</ion-label>
+    <ion-label position="floating">Nombre</ion-label>
     <ion-input [(ngModel)]="nombre"></ion-input>
   </ion-item>
 
   <ion-item class="custom-input">
-    <ion-label position="floating">Email</ion-label>
+    <ion-label position="floating">Correo</ion-label>
     <ion-input [(ngModel)]="correo" type="email"></ion-input>
   </ion-item>
 
   <ion-item class="custom-input">
-    <ion-label position="floating">Password</ion-label>
+    <ion-label position="floating">Contraseña</ion-label>
     <ion-input [(ngModel)]="contrasena" type="password"></ion-input>
   </ion-item>
 
@@ -41,6 +41,6 @@
 
   
 
-  <ion-button expand="block" color="danger" (click)="registrar()">Sign up</ion-button>
+  <ion-button expand="block" color="danger" (click)="registrar()">Registrarse</ion-button>
   <ion-button expand="block" color="danger" [routerLink]="['/login']">Atrás</ion-button>
 </ion-content>
