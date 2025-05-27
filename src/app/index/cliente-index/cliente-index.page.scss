@@ -3,8 +3,11 @@
 .productos-search {
   display: flex;
   align-items: center;
-  margin: 10px 250px;
-  position: relative;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px auto;
+  padding: 0 12px;
 }
 
 ion-searchbar {
@@ -12,8 +15,13 @@ ion-searchbar {
   --color: white;
   --icon-color: white;
   --border-radius: 12px;
-  flex: 1;
+  flex: 1 1 auto;
+  width: 250px;
+  max-width: 350px;
+  min-width: 200px;
 }
+
+
 
 
 /* CATEGORÍAS */

@@ -33,6 +33,7 @@ export class ClienteIndexPage implements OnInit {
       this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
       this.idUsuario = usuario.id;
       this.cargarProductos();
+      this.filtrarProductos1();
     }
 
     this.categorias = [
