@@ -19,6 +19,7 @@ export class ClienteIndexPage implements OnInit {
   searchTerm: string = '';
   categoriaSeleccionada: string = 'Todos';
 
+
   constructor(
     private productoService: ProductoService,
     private pedidoService: PedidoService,
@@ -32,7 +33,6 @@ export class ClienteIndexPage implements OnInit {
       this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
       this.idUsuario = usuario.id;
       this.cargarProductos();
-      
     }
 
     this.categorias = [
@@ -45,31 +45,41 @@ export class ClienteIndexPage implements OnInit {
     ];
   }
 
-  cargarProductos() {
-    this.productoService.obtenerProductos().then(({ data }) => {
-      this.productos = data || [];
-      this.filtrarProductos();
-    });
+  async cargarProductos() {
+    const { data: productosDB, error } = await this.productoService.obtenerProductos();
+
+    if (error) {
+      console.error('Error al obtener productos:', error);
+      return;
+    }
+    this.productos = productosDB || [];
+    this.aplicarFiltros();
   }
-
-
 
   filtrarCategoria(nombre: string) {
     this.categoriaSeleccionada = nombre;
-    this.filtrarProductos();
+    this.aplicarFiltros();
   }
 
-  filtrarProductos() {
+
+  filtrarProductos1() {
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    const categoria = this.categoriaSeleccionada.toLowerCase().replace(/\s+/g, '');
+    const termino = this.searchTerm.toLowerCase();
+
     this.productosFiltrados = this.productos.filter(producto => {
-      const coincideCategoria =
-        this.categoriaSeleccionada === 'Todos' || producto.tipoProducto === this.categoriaSeleccionada;
-      const coincideBusqueda = producto.nombre.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const tipo = producto.tipo?.toLowerCase().replace(/\s+/g, '');
+      const coincideCategoria = categoria === 'todos' || tipo === categoria;
+      const coincideBusqueda =
+        producto.nombre?.toLowerCase().includes(termino) ||
+        producto.descripcion?.toLowerCase().includes(termino);
       return coincideCategoria && coincideBusqueda;
     });
-  }
 
-  onSearchTermChange() {
-    this.filtrarProductos();
+   
   }
 
   agregarAlCarrito(producto: any) {
