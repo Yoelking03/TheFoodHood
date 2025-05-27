@@ -1,13 +1,137 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>new-product</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="shared-background">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">new-product</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="danger" class="header-menu">
+    <img src="assets/img/logo.png" alt="logo" class="logo-img" />
+    <h1 class="menu-title">Nuevo Productos</h1>
+    <div class="user-info">
+    <div class="user-info"><span>Admin</span></div>
+    </div>
+  </ion-toolbar>
+
+
+  <!-- Imagen previa o ícono + -->
+  <div class="imagen-contenedor">
+    <label for="input-imagen" class="cuadro-imagen">
+      <img *ngIf="imagenPreview && imagenPreview !== 'assets/img/hamburger.png'; else placeholder" 
+           [src]="imagenPreview" class="preview-img" alt="Imagen del producto" />
+      <ng-template #placeholder>
+        <span class="plus-icon">+</span>
+      </ng-template>
+    </label>
+    <span class="texto-imagen">Imagen del Producto</span>
+    <input type="file" id="input-imagen" accept="image/*" hidden (change)="cargarImagen($event)" />
+  </div>
+
+  <!-- Formulario -->
+  <div class="ajustes-container">
+
+    <ion-item class="custom-input">
+      <ion-label>Tipo de producto</ion-label>
+      <ion-select [(ngModel)]="tipoProducto">
+        <ion-select-option value="Hamburger">Hamburger</ion-select-option>
+        <ion-select-option value="Hot Dogs">Hot Dogs</ion-select-option>
+        <ion-select-option value="Tacos">Tacos</ion-select-option>
+        <ion-select-option value="Yaroas">Yaroas</ion-select-option>
+        <ion-select-option value="Burritos">Burritos</ion-select-option>
+        <ion-select-option value="Pizzas">Pizzas</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="custom-input">
+      <ion-label position="floating">Nombre del producto</ion-label>
+      <ion-input [(ngModel)]="nombre"></ion-input>
+    </ion-item>
+
+    <ion-item class="custom-input">
+      <ion-label position="floating">Precio del producto</ion-label>
+      <ion-input type="number" [(ngModel)]="precio"></ion-input>
+    </ion-item>
+
+    <ion-item class="custom-input">
+      <ion-label position="floating">Descripción del producto</ion-label>
+      <ion-input [(ngModel)]="descripcion"></ion-input>
+    </ion-item>
+  </div>
+
+  <!-- Botones -->
+  <div class="button-container">
+    <ion-button expand="block" color="danger" (click)="volver()">ATRÁS</ion-button>
+    <ion-button expand="block" color="danger" (click)="guardar()">
+      {{ productoId ? 'ACTUALIZAR' : 'GUARDAR' }}
+    </ion-button>
+  </div>
+
 </ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+<ion-footer>
+  <ion-toolbar color="danger">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+
+        <ion-tab-button [routerLink]="'/pedidos'">
+          <ion-icon name="list-outline"></ion-icon>
+          <ion-label>Pedidos</ion-label>
+
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'repartidor'" [routerLink]="'/ordenes'">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
+          <ion-icon name="cart-outline"></ion-icon>
+          <ion-label>Compras</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'administrador'" [routerLink]="'/product'">
+          <ion-icon name="pricetags-outline"></ion-icon>
+          <ion-label>Productos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button [routerLink]="'/ajustes'">
+          <ion-icon name="settings-outline"></ion-icon>
+          <ion-label>Ajustes</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

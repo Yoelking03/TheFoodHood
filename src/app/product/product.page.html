@@ -1,13 +1,135 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>product</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="shared-background">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">product</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="danger" class="header-menu">
+    <img src="assets/img/logo.png" alt="logo" class="logo-img" />
+    <h1 class="menu-title">Productos</h1>
+    <div class="user-info">
+    <div class="user-info"><span>Admin</span></div>
+    </div>
+  </ion-toolbar>
+
+  <!-- CONTROLES -->
+  <div class="productos-controls">
+    <h2 class="productos-subtitulo">Lista de productos</h2>
+
+    <div class="productos-search">
+      <ion-searchbar
+        placeholder="Buscar productos..."
+        animated="true"
+        showClearButton="focus"
+        [(ngModel)]="searchTerm"
+        (ionInput)="filtrarProductos()">
+      </ion-searchbar>
+    </div>
+
+
+    <ion-button
+      class="agregar-nuevo"
+      fill="outline"
+      color="danger"
+      [routerLink]="['/new-product']">
+      Agregar Nuevo
+    </ion-button>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- MENSAJE SI NO HAY PRODUCTOS -->
+  <div *ngIf="productosFiltrados.length === 0" class="ion-text-center">
+    <h2>No hay productos disponibles</h2>
+  </div>
+
+  <!-- LISTA DE PRODUCTOS -->
+  <div class="productos-container" *ngIf="productosFiltrados.length > 0">
+    <div *ngFor="let producto of productosFiltrados" class="producto-card">
+      <div class="producto-img-container">
+        <img [src]="producto.imagen" [alt]="producto.nombre" class="producto-img" />
+        <span class="producto-precio">$ {{ producto.precio }}</span>
+      </div>
+
+      <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+      <p class="producto-desc">{{ producto.descripcion }}</p>
+
+      <div class="producto-botones">
+        <ion-button fill="outline" size="small" class="btn-white" (click)="modificarProducto(producto)">Modificar</ion-button>
+        <ion-button fill="outline" size="small" class="btn-white" (click)="eliminarProducto(producto.id)">Eliminar</ion-button>
+      </div>
+    </div>
+  </div>
+
 </ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+<ion-footer>
+  <ion-toolbar color="danger">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+
+        <ion-tab-button [routerLink]="'/pedidos'">
+          <ion-icon name="list-outline"></ion-icon>
+          <ion-label>Pedidos</ion-label>
+
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'repartidor'" [routerLink]="'/ordenes'">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
+          <ion-icon name="cart-outline"></ion-icon>
+          <ion-label>Compras</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'administrador'" [routerLink]="'/product'">
+          <ion-icon name="pricetags-outline"></ion-icon>
+          <ion-label>Productos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button [routerLink]="'/ajustes'">
+          <ion-icon name="settings-outline"></ion-icon>
+          <ion-label>Ajustes</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>
+

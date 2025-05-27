@@ -1,0 +1,130 @@
+/* Controles de productos */
+.productos-controls {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ion-text-center {
+  color: white;
+}
+
+.productos-subtitulo {
+  color: #f1a52c;
+  margin-top: 20px;
+  font-size: 25px;
+}
+
+.productos-search {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  position: relative;
+}
+
+ion-searchbar {
+  --background: transparent;
+  --color: white;
+  --icon-color: white;
+  --border-radius: 12px;
+  flex: 1;
+}
+
+.agregar-nuevo {
+  align-self: flex-end;
+  margin-top: 10px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.divider {
+  height: 2px;
+  background-color: #ccc;
+  border: none;
+  margin: 16px auto;
+  width: 80%;
+}
+
+/* Contenedor general de productos */
+.productos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 20px 16px 140px; 
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+/* Tarjeta individual */
+.producto-card {
+  background-color: var(--ion-color-danger);
+  border-radius: 12px;
+  padding: 12px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+/* Imagen */
+.producto-img-container {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 180px;
+}
+
+.producto-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Precio flotante */
+.producto-precio {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--ion-color-danger);
+  color: white;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 20px;
+}
+
+/* Texto */
+.producto-nombre {
+  color: #f1a52c;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 8px 0 4px;
+}
+
+.producto-desc {
+  font-size: 13px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* Botones */
+.producto-botones {
+  display: flex;
+  justify-content: center;       
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;            
+}
+
+.btn-white {
+  --border-color: white;      
+  --color: white;
+  --background: transparent;
+  font-size: 13px;
+  padding: 4px 12px;
+  height: auto;
+  min-height: 30px;
+  border-radius: 8px;
+}
+

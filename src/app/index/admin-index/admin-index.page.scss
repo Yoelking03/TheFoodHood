@@ -1,0 +1,63 @@
+.productos-search {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin: 20px auto 0;
+ 
+}
+
+ion-searchbar {
+  --background: transparent;
+  --color: white;
+  --icon-color: white;
+  --border-radius: 12px;
+  flex: 1;
+}
+
+
+/* CATEGORÍAS */
+.categories-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.category-button {
+  background-color: var(--ion-color-danger);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.category-button img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 6px;
+}
+
+.category-button span {
+  font-size: 18px;
+  
+}
+
+.ion-text-center {
+  color: white;
+}

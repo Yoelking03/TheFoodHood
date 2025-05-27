@@ -7,21 +7,20 @@ import supabase from './supabaseClient';
 export class UsuarioService {
   constructor() {}
 
-  // REGISTRAR USUARIO EN TABLA PERSONALIZADA
-  async registrarUsuario(data: any) {
-    // Asegura que el teléfono se guarde como texto
-    if (typeof data.telefono !== 'string') {
-      data.telefono = String(data.telefono);
-    }
-
-    const { data: resultado, error } = await supabase
-      .from('usuarios')
-      .insert([data])
-      .select();
-
-    if (error) throw error;
-    return resultado;
+// REGISTRAR USUARIO EN TABLA PERSONALIZADA
+async registrarUsuario(data: any) {
+  // Asegura que el teléfono se guarde como texto
+  if (typeof data.telefono !== 'string') {
+    data.telefono = String(data.telefono);
   }
+
+  const { data: resultado, error } = await supabase
+    .from('usuarios')
+    .insert([data])
+    .select();
+
+  return { data: resultado, error }; // ← Retorna ambos
+}
 
   // LOGIN DIRECTO
   async login(correo: string, contrasena: string) {
@@ -47,16 +46,18 @@ export class UsuarioService {
     return data;
   }
 
-  // ACTUALIZAR NOMBRE
-  async actualizarNombreUsuario(id: number | string, nuevoNombre: string) {
-    const { data, error } = await supabase
-      .from('usuarios')
-      .update({ nombre: nuevoNombre })
-      .eq('id', id);
 
-    if (error) throw error;
-    return data;
+  async actualizarUsuario(id: string, datos: any) {
+  const { data, error } = await supabase
+    .from('usuarios')
+    .update(datos)
+    .eq('id', id)
+    .select()
+    .single();
+
+  return { data, error };
   }
+
 
   async recuperarContrasena(correo: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(correo, {
@@ -65,5 +66,15 @@ export class UsuarioService {
 
   if (error) throw error;
   return data;
-}
+  }
+ 
+  async actualizarUbicacion(id: string, ubicacion: string) {
+  const { error } = await supabase
+    .from('usuarios')
+    .update({ ubicacion_actual: ubicacion })
+    .eq('id', id);
+
+    return { error };
+  }
+
 }

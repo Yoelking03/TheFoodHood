@@ -5,12 +5,12 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   {
-    path: 'index',
-    loadChildren: () => import('./index/index.module').then(m => m.IndexPageModule)
-  },
-  {
     path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
+  },
+  {
+    path: 'index',
+    loadChildren: () => import('./index/index.module').then(m => m.IndexPageModule)
   },
   {
     path: 'register',
@@ -47,7 +47,7 @@ const routes: Routes = [
   {
     path: 'reset-password',
     loadChildren: () => import('./reset-password/reset-password.module').then(m => m.ResetPasswordPageModule)
-  },
+  }
 ];
 
 @NgModule({

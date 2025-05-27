@@ -1,0 +1,70 @@
+/* Imagen */
+.imagen-contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto 10px;
+}
+
+.cuadro-imagen {
+  width: 180px;
+  height: 180px;
+  border: 2px dashed #fff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.plus-icon {
+  font-size: 60px;
+  color: white;
+}
+
+.texto-imagen {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+
+/* Formulario */
+.ajustes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.custom-input {
+  width: 85%;
+  max-width: 320px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  --background: rgba(255, 255, 255, 0.1);
+  --highlight-color-focused: #d32f2f;
+  color: white;
+  font-size: 15px;
+}
+
+/* Botones */
+.button-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px auto 120px;
+}

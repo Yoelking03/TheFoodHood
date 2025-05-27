@@ -57,12 +57,14 @@ export class LoginPage {
     // 4. Redirigir según el tipo de usuario
     const tipo = usuario.tipo_usuario?.toLowerCase();
 
-    if (tipo === 'repartidor') {
+    if (tipo === 'administrador') {
+      this.router.navigate(['/index/admin-index']);
+    } else if (tipo === 'cliente') {
+      this.router.navigate(['/index/cliente-index']);
+    } else if (tipo === 'repartidor') {
       this.router.navigate(['/ordenes']);
-    } else if (tipo === 'cliente' || tipo === 'administrador') {
-      this.router.navigate(['/index']);
     } else {
-      this.mostrarToast('Tipo de usuario desconocido.', 'warning');
+      this.router.navigate(['/login']);
     }
   }
 

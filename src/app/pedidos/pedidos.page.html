@@ -1,13 +1,89 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>pedidos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="shared-background">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">pedidos</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+  <ion-toolbar color="danger" class="header-menu">
+    <img src="assets/img/logo.png" alt="logo" class="logo-img" />
+    <h1 class="menu-title">Pedidos</h1>
+    <div class="user-info">
+    <div class="user-info">
+      <span *ngIf="tipoUsuario === 'administrador'">Admin</span>
+      <span *ngIf="tipoUsuario === 'cliente'">Usuario</span>
+      <span *ngIf="tipoUsuario === 'repartidor'">Repartidor</span>
+    </div>
+    </div>
+  </ion-toolbar>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+<ion-footer>
+  <ion-toolbar color="danger">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+
+        <ion-tab-button [routerLink]="'/pedidos'">
+          <ion-icon name="list-outline"></ion-icon>
+          <ion-label>Pedidos</ion-label>
+
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'repartidor'" [routerLink]="'/ordenes'">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Inicio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
+          <ion-icon name="cart-outline"></ion-icon>
+          <ion-label>Compras</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf="tipoUsuario === 'administrador'" [routerLink]="'/product'">
+          <ion-icon name="pricetags-outline"></ion-icon>
+          <ion-label>Productos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button [routerLink]="'/ajustes'">
+          <ion-icon name="settings-outline"></ion-icon>
+          <ion-label>Ajustes</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>
