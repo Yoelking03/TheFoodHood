@@ -238,6 +238,7 @@
 
         <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
           <ion-icon name="cart-outline"></ion-icon>
+          <ion-badge *ngIf="contadorCarrito > 0" class="carrito-badge">{{ contadorCarrito }}</ion-badge>
           <ion-label>Compras</ion-label>
         </ion-tab-button>
 

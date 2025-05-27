@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 
+
 @Component({
   selector: 'app-admin-index',
   templateUrl: './admin-index.page.html',
@@ -11,6 +12,11 @@ export class AdminIndexPage implements OnInit {
   tipoUsuario: string = '';
   categorias: any[] = [];
   productosFiltrados: any[] = [];
+  productos: any[] = [];
+  idUsuario: number = 0;
+  contadorCarrito: number = 0;
+  searchTerm: string = '';
+  categoriaSeleccionada: string = 'Todos';
   
 
 
@@ -21,6 +27,8 @@ export class AdminIndexPage implements OnInit {
     if (usuarioStr) {
       const usuario = JSON.parse(usuarioStr);
       this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
+      this.cargarProductos();
+      this.filtrarProductos1();
     }
     
     this.categorias = [
@@ -35,11 +43,41 @@ export class AdminIndexPage implements OnInit {
   }
 
   
-  async filtrarCategoria(nombre: string) {
-    const { data: productos } = await this.productoService.obtenerProductos();
-    this.productosFiltrados = (productos || []).filter(p =>
-      p.tipo?.toLowerCase() === nombre.toLowerCase()
-    );
+  async cargarProductos() {
+    const { data: productosDB, error } = await this.productoService.obtenerProductos();
+
+    if (error) {
+      console.error('Error al obtener productos:', error);
+      return;
+    }
+    this.productos = productosDB || [];
+    this.aplicarFiltros();
+  }
+
+  filtrarCategoria(nombre: string) {
+    this.categoriaSeleccionada = nombre;
+    this.aplicarFiltros();
+  }
+
+
+  filtrarProductos1() {
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    const categoria = this.categoriaSeleccionada.toLowerCase().replace(/\s+/g, '');
+    const termino = this.searchTerm.toLowerCase();
+
+    this.productosFiltrados = this.productos.filter(producto => {
+      const tipo = producto.tipo?.toLowerCase().replace(/\s+/g, '');
+      const coincideCategoria = categoria === 'todos' || tipo === categoria;
+      const coincideBusqueda =
+        producto.nombre?.toLowerCase().includes(termino) ||
+        producto.descripcion?.toLowerCase().includes(termino);
+      return coincideCategoria && coincideBusqueda;
+    });
+
+   
   }
 
 }

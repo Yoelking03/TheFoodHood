@@ -45,6 +45,7 @@ async registrarUsuario(data: any) {
     if (error) throw error;
     return data;
   }
+  
 
 
   async actualizarUsuario(id: string, datos: any) {

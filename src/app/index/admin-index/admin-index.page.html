@@ -6,56 +6,49 @@
   </ion-toolbar>
 
 
-<div class="productos-search">
- <ion-button size="small" color="danger">Todo</ion-button>
-   <ion-searchbar
-    placeholder="Buscar productos..."
-    animated="true"
-    showClearButton="focus">
-  </ion-searchbar>
-</div>
+  <div class="productos-search">
+    <ion-button size="small" color="danger" (click)="filtrarCategoria('Todos')">Todo</ion-button>
+    <ion-searchbar
+      placeholder="Buscar productos..."
+      animated="true"
+      showClearButton="focus"
+      [(ngModel)]="searchTerm"
+      (ionInput)="filtrarProductos1()">
+    </ion-searchbar>
+  </div>
 
-      <!-- CATEGORÍAS -->
-<div class="categories-container">
-  <ng-container *ngFor="let categoria of categorias">
-    <button class="category-button" (click)="filtrarCategoria(categoria.nombre)">
-      <img [src]="categoria.imagen" [alt]="categoria.nombre" />
-      <span>{{ categoria.nombre }}</span>
-    </button>
-  </ng-container>
-</div>
+  <!-- CATEGORÍAS -->
+  <div class="categories-container">
+    <ng-container *ngFor="let categoria of categorias">
+      <button
+        class="category-button"
+        [class.selected]="categoriaSeleccionada === categoria.nombre"
+        (click)="filtrarCategoria(categoria.nombre)">
+        <img [src]="categoria.imagen" [alt]="categoria.nombre" />
+        <span>{{ categoria.nombre }}</span>
+      </button>
+    </ng-container>
+  </div>
 
-<div *ngIf="productosFiltrados.length === 0" class="ion-text-center">
-  <h2>No hay productos disponibles</h2>
-</div>
-    
+  <div *ngIf="productosFiltrados.length === 0" class="ion-text-center">
+    <h2>No hay productos disponibles</h2>
+  </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <!-- LISTA DE PRODUCTOS -->
+  <div class="scroll-content" *ngIf="productosFiltrados.length > 0">
+    <div class="productos-container">
+      <div class="producto-card" *ngFor="let producto of productosFiltrados">
+        <img [src]="producto.imagen" [alt]="producto.nombre" class="producto-img" />
+        <div class="producto-info">
+          <strong>{{ producto.nombre }}</strong>
+          <span>{{ producto.descripcion }}</span>
+        </div>
+        <div class="producto-footer">
+          <span class="precio">RD$ {{ producto.precio | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

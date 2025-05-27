@@ -9,6 +9,49 @@
   </ion-toolbar>
 
 
+    <!-- MENSAJE SI NO HAY PRODUCTOS -->
+  <div *ngIf="carrito.length === 0" class="ion-text-center">
+    <h2>No hay productos en el carrito</h2>
+  </div>
+
+  <!-- LISTA DE PRODUCTOS EN EL CARRITO -->
+  <div *ngIf="carrito.length > 0" class="contenedor-carrito">
+    <div *ngFor="let producto of carrito" class="item-producto">
+      <div class="producto-imagen">
+        <img [src]="producto.imagen" class="producto-img" />
+      </div>
+
+      <div class="producto-info">
+        <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+        <p class="producto-desc">{{ producto.descripcion }}</p>
+        <p class="precio-unitario">Precio unitario: RD$ {{ producto.precio | number:'1.2-2' }}</p>
+
+        <div class="controles">
+          <ion-checkbox [(ngModel)]="producto.seleccionado" (ionChange)="actualizarTotales()"></ion-checkbox>
+          <label>Cant.</label>
+          <ion-button size="small" (click)="disminuirCantidad(producto)">-</ion-button>
+          <span>{{ producto.cantidad }}</span>
+          <ion-button size="small" (click)="aumentarCantidad(producto)">+</ion-button>
+
+          <ion-button size="small" class="eliminar" (click)="eliminarProducto(producto.id_producto)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL Y BOTÓN DE COMPRA -->
+  <div *ngIf="carrito.length > 0" class="resumen-compra">
+    <h2>Total: RD$ {{ total | number:'1.2-2' }}</h2>
+    <ion-button expand="full" color="danger" [disabled]="!haySeleccionados()" (click)="confirmarMetodoEntrega()">
+      Realizar Compra
+    </ion-button>
+  </div>
+
+</ion-content>
+
+
 
 
 
@@ -67,6 +110,7 @@
 
         <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
           <ion-icon name="cart-outline"></ion-icon>
+          <ion-badge *ngIf="contadorCarrito > 0" class="carrito-badge">{{ contadorCarrito }}</ion-badge>
           <ion-label>Compras</ion-label>
         </ion-tab-button>
 

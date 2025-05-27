@@ -74,10 +74,12 @@
             <ion-label>Inicio</ion-label>
           </ion-tab-button>
 
-          <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
+          <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'" class="carrito-tab">
             <ion-icon name="cart-outline"></ion-icon>
+            <ion-badge *ngIf="contadorCarrito > 0" class="carrito-badge">{{ contadorCarrito }}</ion-badge>
             <ion-label>Compras</ion-label>
           </ion-tab-button>
+
 
           <ion-tab-button *ngIf="tipoUsuario === 'administrador'" [routerLink]="'/product'">
             <ion-icon name="pricetags-outline"></ion-icon>

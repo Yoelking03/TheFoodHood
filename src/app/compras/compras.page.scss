@@ -1,0 +1,175 @@
+
+
+
+/* ======= CONTENEDOR DE CARRITO (1 solo fondo rojo) ======= */
+.contenedor-carrito {
+  background-color: var(--ion-color-danger);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 90px 16px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Producto individual */
+.item-producto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+ border-bottom: 2.5px solid rgba(255,255,255,0.4);
+  padding-bottom: 12px;
+}
+
+.item-producto:last-child {
+  border-bottom: none;
+}
+
+/* Imagen del producto */
+.producto-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.producto-precio {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background-color: var(--ion-color-danger);
+  color: white;
+  padding: 2px 6px;
+  font-size: 0.75em;
+  border-radius: 6px;
+  border: 1px solid white;
+}
+
+/* Info del producto */
+.producto-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.producto-nombre {
+  font-weight: bold;
+  color: #f1a52c;
+  margin: 0;
+}
+
+.precio-unitario {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+
+.producto-desc {
+  font-size: 0.85em;
+  color: white;
+  background-color: rgba(255,255,255,0.15);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-style: italic;
+}
+
+.controles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  color: white; /* <-- Esto hace que "Cant." y el número sean blancos */
+}
+
+.controles span {
+  color: white; /* <-- Asegura que el número (cantidad) también sea blanco */
+  font-weight: bold;
+}
+
+
+.controles ion-button {
+  color: white;
+  font-size: 1em;
+  --background: transparent;
+  --color: white;
+  border: 1px solid white;
+  border-radius: 6px;
+}
+
+.eliminar {
+  margin-left: auto;
+}
+
+
+/* ======= RESUMEN DE COMPRA ======= */
+.resumen-compra {
+  margin: 20px 16px 100px 16px;
+  text-align: center;
+}
+
+.resumen-compra h2 {
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.resumen-compra ion-button {
+  font-weight: bold;
+  border-radius: 10px;
+  width: 200px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.carrito-tab {
+  position: relative;
+}
+
+.carrito-badge {
+  position: absolute;
+  top: 2px;
+  right: 18px;
+  font-size: 11px;
+  z-index: 10;
+  animation: aparecer .3s ease;
+}
+
+@keyframes aparecer {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

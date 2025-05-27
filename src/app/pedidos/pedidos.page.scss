@@ -1,0 +1,125 @@
+/* CONTENEDOR DE PEDIDOS */
+.pedidos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 12px;
+  padding-bottom: 80px;
+  gap: 16px;
+}
+
+/* TARJETA DE PEDIDO */
+.pedido-card {
+  background-color: #d32f2f;
+  color: white;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 240px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 13px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+/* IMAGEN DEL PRODUCTO */
+.pedido-card img,
+.pedido-imagen {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+/* TEXTO DE PEDIDO */
+.pedido-titulo {
+  font-size: 16px;
+  font-weight: bold;
+  color: yellow;
+  margin: 4px 0 2px;
+}
+
+.pedido-desc {
+  font-size: 13px;
+  color: #fff;
+  margin: 2px 0;
+}
+
+.pedido-cantidad {
+  font-weight: bold;
+  color: yellow;
+  margin-bottom: 5px;
+}
+
+/* ESTADO */
+.status-container {
+  border: 2px solid white;
+  border-radius: 14px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.status-container::before {
+  content: "🚚 ";
+  margin-right: 4px;
+}
+
+/* COLORES SEGÚN ESTADO */
+.status-container.pendiente { background-color: gray; }
+.status-container.preparando { background-color: orange; }
+.status-container.paraentrega { background-color: gold; color: black; }
+.status-container.encamino { background-color: dodgerblue; }
+.status-container.entregado { background-color: green; }
+.status-container.comprado { background-color: black; }
+
+/* SELECTOR DE ESTADO */
+.estado-item {
+  --background: transparent;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding: 0;
+  min-height: 36px;
+}
+
+.estado-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0 0 4px 4px;
+}
+
+.estado-select {
+  --background: #ffffff;
+  --padding-start: 8px;
+  --min-height: 32px;
+  --border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+
+
+.carrito-tab {
+  position: relative;
+}
+
+.carrito-badge {
+  position: absolute;
+  top: 2px;
+  right: 18px;
+  font-size: 11px;
+  z-index: 10;
+  animation: aparecer .3s ease;
+}
+
+@keyframes aparecer {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

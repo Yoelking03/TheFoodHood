@@ -7,20 +7,22 @@ import supabase from './supabaseClient';
 export class PedidoService {
   constructor() {}
 
-  // ✅ Crear nuevo pedido
-  crearPedido(data: {
-    id_usuario: number;
-    id_producto: number;
-    cantidad: number;
-    total?: number;
-    estado: string;
-  }) {
-    return supabase
-      .from('pedidos')
-      .insert([data])
-      .select()
-      .single(); // Devuelve un objeto único con su ID
-  }
+  
+
+// ✅ Crear pedido general con total y tipo_entrega
+crearPedidoGeneral(data: {
+  id_usuario: number;
+  estado: string;
+  total: number;
+  tipo_entrega: string;
+}) {
+  return supabase
+    .from('pedidos')
+    .insert([data])
+    .select()
+    .single();
+}
+
 
   // ✅ Obtener todos los pedidos (admin)
   obtenerPedidos() {
@@ -84,12 +86,21 @@ export class PedidoService {
     return supabase.from('pedidos').delete().neq('id', 0);
   }
   // ✅ Obtener cantidad de productos en el carrito del usuario
-obtenerCantidadPedidos(id_usuario: number) {
-  return supabase
+// ✅ Obtener cantidad de productos en el carrito del usuario
+async obtenerCantidadPedidos(id_usuario: number) {
+  const { count, error } = await supabase
     .from('pedidos')
     .select('id', { count: 'exact', head: true })
-    .eq('id_usuario', id_usuario)
-    .then(res => res.count); // retorna solo el número
+    .eq('id_usuario', id_usuario);
+
+  if (error) {
+    console.error('Error al obtener cantidad de pedidos:', error);
+    return 0;
+  }
+
+  return count || 0;
 }
+
+
 
 }

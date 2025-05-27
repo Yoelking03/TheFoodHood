@@ -34,6 +34,7 @@ export class ClienteIndexPage implements OnInit {
       this.idUsuario = usuario.id;
       this.cargarProductos();
       this.filtrarProductos1();
+      this.actualizarContadorCarrito();
     }
 
     this.categorias = [
@@ -45,6 +46,11 @@ export class ClienteIndexPage implements OnInit {
       { nombre: 'Pizzas', imagen: 'assets/img/Pizza.png' }
     ];
   }
+
+  ionViewWillEnter() {
+  this.actualizarContadorCarrito();
+  }
+
 
   async cargarProductos() {
     const { data: productosDB, error } = await this.productoService.obtenerProductos();
@@ -83,7 +89,50 @@ export class ClienteIndexPage implements OnInit {
    
   }
 
-  agregarAlCarrito(producto: any) {
-    // Tu lógica de agregar al carrito
+agregarAlCarrito(producto: any) {
+  const claveCarrito = `carrito_${this.idUsuario}`;
+  const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+
+  // Buscar si ya está el producto en el carrito por su id_producto
+  const index = carrito.findIndex((item: any) => item.id_producto === producto.id);
+
+  if (index !== -1) {
+    // Ya existe → aumentar cantidad
+    carrito[index].cantidad += 1;
+  } else {
+    // Nuevo producto → agregar con campos adecuados
+    carrito.push({
+      ...producto,
+      id_producto: producto.id,
+      cantidad: 1,
+      seleccionado: true
+    });
   }
+
+  // Guardar carrito actualizado
+  localStorage.setItem(claveCarrito, JSON.stringify(carrito));
+
+  // Actualizar contador global
+  this.actualizarContadorCarrito();
+
+  // Mostrar mensaje
+  this.mostrarToast('Producto agregado al carrito');
+}
+
+
+actualizarContadorCarrito() {
+  const claveCarrito = `carrito_${this.idUsuario}`;
+  const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+  this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
+}
+
+async mostrarToast(mensaje: string) {
+  const toast = await this.toastController.create({
+    message: mensaje,
+    duration: 1500,
+    color: 'success',
+  });
+  await toast.present();
+}
+
 }

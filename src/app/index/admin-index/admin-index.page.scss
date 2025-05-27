@@ -1,9 +1,11 @@
 .productos-search {
   display: flex;
   align-items: center;
-  width: fit-content;
-  margin: 20px auto 0;
- 
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px auto;
+  padding: 0 12px;
 }
 
 ion-searchbar {
@@ -11,7 +13,10 @@ ion-searchbar {
   --color: white;
   --icon-color: white;
   --border-radius: 12px;
-  flex: 1;
+  flex: 1 1 auto;
+  width: 250px;
+  max-width: 350px;
+  min-width: 200px;
 }
 
 
@@ -60,4 +65,83 @@ ion-searchbar {
 
 .ion-text-center {
   color: white;
+}
+
+.productos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 12px 100px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+
+.producto-card {
+  background-color: var(--ion-color-danger);
+  padding: 8px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 150px;
+  animation: popUp 0.5s ease forwards;
+ 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.producto-card:hover {
+  transform: scale(1.05) translateY(-6px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+.producto-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.producto-info {
+  margin-top: 6px;
+}
+
+.producto-info strong {
+  display: block;
+  font-size: 15px;
+  color: #f1a52c; 
+}
+
+.producto-card:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+}
+
+
+.producto-info span {
+  font-size: 13px;
+}
+
+.producto-footer {
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.producto-footer .precio {
+  font-weight: bold;
+}
+
+.btn-carrito {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
 }

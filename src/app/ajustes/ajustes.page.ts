@@ -20,6 +20,9 @@ export class AjustesPage implements OnInit {
     nombre: '',
     telefono: '',
     direccion: '' };
+    contadorCarrito: number = 0;
+    
+
 
   constructor(
     private toastCtrl: ToastController, private usuarioService: UsuarioService,   private router: Router) {
@@ -39,6 +42,7 @@ export class AjustesPage implements OnInit {
         telefono: usuario.telefono || '',
         direccion: usuario.direccion || ''
       };
+       this.actualizarContadorCarrito();
     }
   }
 
@@ -147,4 +151,18 @@ export class AjustesPage implements OnInit {
 
   this.router.navigate(['/login']);
   }
+
+  actualizarContadorCarrito() {
+  const usuarioStr = localStorage.getItem('usuario');
+  if (usuarioStr) {
+    const usuario = JSON.parse(usuarioStr);
+    const idUsuario = usuario.id;
+    const claveCarrito = `carrito_${idUsuario}`;
+    const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+    this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
+  } else {
+    this.contadorCarrito = 0;
+  }
+}
+
 }
