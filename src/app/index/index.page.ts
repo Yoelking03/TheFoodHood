@@ -8,6 +8,7 @@ import { UsuarioService } from '../services/usuario.service';
   standalone: false
 })
 export class IndexPage implements OnInit {
+  tipoUsuario: string = "";
 
   constructor(
     private router: Router,
@@ -15,13 +16,14 @@ export class IndexPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+
+    const usuarioStr = localStorage.getItem('usuario');
+    if (usuarioStr) {
+      const usuario = JSON.parse(usuarioStr);
+      this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
+
     const userStr = localStorage.getItem('usuario');
     const user = userStr ? JSON.parse(userStr) : null;
-
-    if (!user || !user.id) {
-      this.router.navigate(['/login']);
-      return;
-    }
 
     try {
       const data = await this.usuarioService.obtenerUsuarioPorId(user.id);
@@ -43,3 +45,5 @@ export class IndexPage implements OnInit {
   }
 
 }
+}
+
