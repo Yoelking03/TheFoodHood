@@ -155,7 +155,7 @@ export class ComprasPage implements OnInit {
                   if (req.location !== 'granted') {
                     const alert = await this.alertCtrl.create({
                       header: 'Permiso requerido',
-                      message: 'Debes activar el permiso de ubicación para continuar con el delivery.',
+                      message: 'Activa el permiso de ubicación desde configuración.',
                       buttons: ['OK']
                     });
                     await alert.present();
@@ -177,19 +177,20 @@ export class ComprasPage implements OnInit {
                       await this.usuarioService.actualizarUbicacion(this.idUsuario.toString(), ubicacion);
                       this.continuarCompra(tipoEntrega);
                     }
-                  }]
+                  }],
                 });
                 await confirm.present();
 
               } catch (error) {
                 const toast = await this.toastController.create({
-                  message: 'No se pudo obtener la ubicación. Activa el GPS desde configuración.',
+                  message: 'No se pudo obtener tu ubicación. Verifica permisos y activa el GPS.',
                   duration: 3000,
                   color: 'danger'
                 });
                 await toast.present();
               }
             }
+
           }
         ]
       });
