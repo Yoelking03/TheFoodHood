@@ -11,7 +11,7 @@ import { ToastController } from '@ionic/angular';
   standalone: false,
 })
 export class PedidosPage implements OnInit {
-  tipoUsuario: string = "";
+  tipoUsuario: string = '';
   contadorCarrito: number = 0;
   pedidos: any[] = [];
   nombreUsuario: string = '';
@@ -51,41 +51,41 @@ export class PedidosPage implements OnInit {
       const { data: productos } = await this.productoService.obtenerProductos();
       this.productos = productos || [];
 
-      let res;
+      const { data: pedidosRaw } = await this.pedidoService.obtenerPedidos();
+      const pedidos = pedidosRaw || [];
+
+      const detallesRes = await this.detallepedidoService.obtenerDetallesPedidos();
+      const detalles = detallesRes.data || [];
+
+      let pedidosFiltrados = pedidos.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+
       if (this.tipoUsuario === 'cliente') {
-        res = await this.pedidoService.obtenerPedidosPorUsuario(this.idUsuario);
-      } else {
-        res = await this.pedidoService.obtenerPedidos();
-      }
-
-      const pedidos = res.data || [];
-
-      let pedidosFiltrados = pedidos;
-
-      if (this.tipoUsuario === 'administrador') {
-        pedidosFiltrados = pedidos.filter(p =>
-          ['pendiente', 'preparando'].includes(p.estado) ||
-          (p.estado === 'para entrega' && !p.id_delivery)
-        );
+        pedidosFiltrados = pedidosFiltrados.filter(p => p.id_usuario === this.idUsuario);
       } else if (this.tipoUsuario === 'repartidor') {
-        pedidosFiltrados = pedidos.filter(p =>
-          p.estado === 'para entrega' && !p.id_delivery
+        pedidosFiltrados = pedidosFiltrados.filter(p =>
+          (!p.id_delivery && p.estado === 'para entrega') ||
+          (p.id_delivery === this.idUsuario && p.estado !== 'entregado')
         );
-      } else if (this.tipoUsuario === 'cliente') {
-        pedidosFiltrados = pedidos.filter(p =>
-          p.id_usuario === this.idUsuario &&
-          !['carrito', 'completado', 'entregado', 'recogido'].includes(p.estado)
+      } else if (this.tipoUsuario === 'administrador') {
+        pedidosFiltrados = pedidosFiltrados.filter(p =>
+          ['pendiente', 'preparando', 'listo', 'para entrega', 'entregado'].includes(p.estado)
         );
       }
 
       this.pedidos = pedidosFiltrados.map(p => {
-        const producto = this.productos.find(prod => prod.id === p.id_producto);
+        const detalle = detalles.find(d => d.id_pedido === p.id);
+        const producto = this.productos.find(prod => prod.id === detalle?.id_producto);
+
         return {
           ...p,
           nombre: producto?.nombre || 'Producto',
           descripcion: producto?.descripcion || 'Sin descripción',
           imagen: producto?.imagen || 'assets/img/default.png',
-          codigoIngresado: ''
+          precio: producto?.precio || 0,
+          cantidad: detalle?.cantidad || 1,
+          codigoIngresado: '',
+          nombre_usuario: detalle?.nombre_usuario || '',
+          direccion: detalle?.direccion || detalle?.ubicacion || ''
         };
       });
 
@@ -95,7 +95,7 @@ export class PedidosPage implements OnInit {
   }
 
   async cambiarEstado(pedido: any) {
-    await this.pedidoService.actualizarEstadoPedido(pedido.id_pedido, pedido.estado);
+    await this.detallepedidoService.actualizarEstadoPedido(pedido.id, pedido.estado);
     const toast = await this.toastCtrl.create({
       message: 'Estado actualizado',
       duration: 1500,
@@ -113,11 +113,7 @@ export class PedidosPage implements OnInit {
   }
 
   async verificarCodigoEntrega(pedido: any) {
-    if (
-      this.tipoUsuario === 'cliente' &&
-      pedido.tipo_entrega === 'delivery' &&
-      pedido.estado === 'en camino'
-    ) {
+    if (this.tipoUsuario === 'cliente' && pedido.tipo_entrega === 'delivery' && pedido.estado === 'en camino') {
       const { error } = await this.detallepedidoService.confirmarEntregaConCodigo(pedido.id_pedido, pedido.codigoIngresado);
       const toast = await this.toastCtrl.create({
         message: error ? 'Código incorrecto' : 'Entrega confirmada',
@@ -161,15 +157,12 @@ export class PedidosPage implements OnInit {
     const { data } = await this.pedidoService.obtenerPedidos();
     if (!data) return;
 
-    let pedidosValidos = [];
+    let pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
 
     if (this.tipoUsuario === 'repartidor') {
-      pedidosValidos = data.filter(p =>
-        p.estado === 'para entrega' && !p.id_delivery
-      );
-    } else {
-      pedidosValidos = data.filter(p =>
-        !['carrito', 'completado', 'entregado', 'recogido'].includes(p.estado)
+      pedidosValidos = pedidosValidos.filter(p =>
+        (!p.id_delivery && p.estado === 'para entrega') ||
+        (p.id_delivery === this.idUsuario && p.estado !== 'entregado')
       );
     }
 

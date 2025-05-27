@@ -49,13 +49,19 @@ export class DetallePedidoService {
     return { data, error };
   }
   
-  async crearDetallePedido(data: {
-  id_pedido: number,
-  id_producto: number,
-  cantidad: number
-}) {
-  return await supabase.from('detalles_pedidos').insert([data]);
-}
+      async crearDetallePedido(data: {
+      id_pedido: number,
+      id_producto: number,
+      cantidad: number
+    }) {
+      return await supabase.from('detalles_pedidos').insert([data]);
+    }
+    async obtenerDetallesPedidos() {
+      return await supabase
+        .from('detalles_pedidos')
+        .select('*');
+    }
+
 
 
   async obtenerPedidosRepartidor(usuarioId: number) {
