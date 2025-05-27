@@ -5,6 +5,8 @@ import { DetallePedidoService } from 'src/app/services/detalle-pedido.service';
 import { UsuarioService } from '../services/usuario.service';
 import { Geolocation } from '@capacitor/geolocation';
 
+
+
 @Component({
   selector: 'app-compras',
   templateUrl: './compras.page.html',
@@ -146,6 +148,21 @@ export class ComprasPage implements OnInit {
             text: 'Sí',
             handler: async () => {
               try {
+                const permStatus = await Geolocation.checkPermissions();
+
+                if (permStatus.location !== 'granted') {
+                  const req = await Geolocation.requestPermissions();
+                  if (req.location !== 'granted') {
+                    const alert = await this.alertCtrl.create({
+                      header: 'Permiso requerido',
+                      message: 'Debes activar el permiso de ubicación para continuar con el delivery.',
+                      buttons: ['OK']
+                    });
+                    await alert.present();
+                    return;
+                  }
+                }
+
                 const position = await Geolocation.getCurrentPosition();
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
@@ -160,12 +177,13 @@ export class ComprasPage implements OnInit {
                       await this.usuarioService.actualizarUbicacion(this.idUsuario.toString(), ubicacion);
                       this.continuarCompra(tipoEntrega);
                     }
-                  }],
+                  }]
                 });
                 await confirm.present();
+
               } catch (error) {
                 const toast = await this.toastController.create({
-                  message: 'No se pudo obtener tu ubicación. Activa el GPS.',
+                  message: 'No se pudo obtener la ubicación. Activa el GPS desde configuración.',
                   duration: 3000,
                   color: 'danger'
                 });
