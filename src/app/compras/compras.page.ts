@@ -122,67 +122,38 @@ export class ComprasPage implements OnInit {
     await alert.present();
   }
 
-  async realizarCompra(tipoEntrega: string) {
-    if (tipoEntrega === 'delivery') {
-      const alert = await this.alertCtrl.create({
-        header: 'Ubicación para el delivery',
-        message: '¿Deseas que usemos tu ubicación actual para la entrega del pedido?',
-        buttons: [
-          {
-            text: 'No',
-            role: 'cancel',
-            handler: async () => {
-              const aviso = await this.alertCtrl.create({
-                header: 'Dirección registrada',
-                message: 'Tu pedido será enviado a la dirección ya registrada.',
-                buttons: [{
-                  text: 'OK',
-                  handler: () => {
-                    this.continuarCompra(tipoEntrega);
-                  }
-                }],
-              });
-              await aviso.present();
-            }
-          },
-          {
-            text: 'Sí',
-            handler: async () => {
-                            if (Capacitor.getPlatform() === 'web') {
-                // Estás en navegador (como Chrome en iOS vía Vercel)
-                navigator.geolocation.getCurrentPosition(
-                  async (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    const ubicacion = `${lat},${lon}`;
+async realizarCompra(tipoEntrega: string) {
+  if (tipoEntrega === 'delivery') {
+    const alert = await this.alertCtrl.create({
+      header: 'Ubicación para el delivery',
+      message: '¿Deseas que usemos tu ubicación actual para la entrega del pedido?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: async () => {
+            const usuario = await this.usuarioService.obtenerUsuarioPorId(this.idUsuario);
+            const direccion = usuario?.direccion || 'Dirección no disponible';
 
-                    const confirm = await this.alertCtrl.create({
-                      header: 'Ubicación detectada',
-                      message: 'Se usará tu ubicación actual para el delivery.',
-                      buttons: [{
-                        text: 'OK',
-                        handler: async () => {
-                          await this.usuarioService.actualizarUbicacion(this.idUsuario.toString(), ubicacion);
-                          this.continuarCompra(tipoEntrega);
-                        }
-                      }],
-                    });
-                    await confirm.present();
-                  },
-                  async (error) => {
-                    const toast = await this.toastController.create({
-                      message: 'No se pudo obtener tu ubicación en el navegador. Activa permisos en configuración.',
-                      duration: 3000,
-                      color: 'danger'
-                    });
-                    await toast.present();
-                  }
-                );
-              } else {
-                // App nativa con Capacitor
-                try {
-                  const perm = await Geolocation.requestPermissions();
-                  const position = await Geolocation.getCurrentPosition();
+            const aviso = await this.alertCtrl.create({
+              header: 'Dirección registrada',
+              message: 'Tu pedido será enviado a la dirección ya registrada.',
+              buttons: [{
+                text: 'OK',
+                handler: () => {
+                  this.continuarCompra(tipoEntrega, direccion);
+                }
+              }],
+            });
+            await aviso.present();
+          }
+        },
+        {
+          text: 'Sí',
+          handler: async () => {
+            if (Capacitor.getPlatform() === 'web') {
+              navigator.geolocation.getCurrentPosition(
+                async (position) => {
                   const lat = position.coords.latitude;
                   const lon = position.coords.longitude;
                   const ubicacion = `${lat},${lon}`;
@@ -194,35 +165,65 @@ export class ComprasPage implements OnInit {
                       text: 'OK',
                       handler: async () => {
                         await this.usuarioService.actualizarUbicacion(this.idUsuario.toString(), ubicacion);
-                        this.continuarCompra(tipoEntrega);
+                        this.continuarCompra(tipoEntrega, ubicacion);
                       }
                     }],
                   });
                   await confirm.present();
-                } catch (error) {
+                },
+                async (error) => {
                   const toast = await this.toastController.create({
-                    message: 'Error al obtener la ubicación. Verifica permisos o activa el GPS.',
+                    message: 'No se pudo obtener tu ubicación en el navegador. Activa permisos en configuración.',
                     duration: 3000,
                     color: 'danger'
                   });
                   await toast.present();
                 }
+              );
+            } else {
+              try {
+                const perm = await Geolocation.requestPermissions();
+                const position = await Geolocation.getCurrentPosition();
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const ubicacion = `${lat},${lon}`;
+
+                const confirm = await this.alertCtrl.create({
+                  header: 'Ubicación detectada',
+                  message: 'Se usará tu ubicación actual para el delivery.',
+                  buttons: [{
+                    text: 'OK',
+                    handler: async () => {
+                      await this.usuarioService.actualizarUbicacion(this.idUsuario.toString(), ubicacion);
+                      this.continuarCompra(tipoEntrega, ubicacion);
+                    }
+                  }],
+                });
+                await confirm.present();
+              } catch (error) {
+                const toast = await this.toastController.create({
+                  message: 'Error al obtener la ubicación. Verifica permisos o activa el GPS.',
+                  duration: 3000,
+                  color: 'danger'
+                });
+                await toast.present();
               }
-                          
-
             }
-
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      await alert.present();
-    } else {
-      this.continuarCompra(tipoEntrega);
-    }
+    await alert.present();
+  } else {
+    const usuario = await this.usuarioService.obtenerUsuarioPorId(this.idUsuario);
+    const direccion = usuario?.direccion || 'Dirección no disponible';
+    this.continuarCompra(tipoEntrega, direccion);
   }
+}
 
-  async continuarCompra(tipoEntrega: string) {
+
+  async continuarCompra(tipoEntrega: string, direccionEntrega: string) {
     const productosSeleccionados = this.carrito.filter(p => p.seleccionado);
     const totalCompra = productosSeleccionados.reduce((sum, p) => sum + p.precio * p.cantidad, 0);
 
@@ -231,7 +232,10 @@ export class ComprasPage implements OnInit {
         id_usuario: this.idUsuario,
         estado: 'pendiente',
         total: totalCompra,
-        tipo_entrega: tipoEntrega
+        tipo_entrega: tipoEntrega,
+        direccion_entrega: direccionEntrega,
+        
+        
       });
 
       for (const producto of productosSeleccionados) {

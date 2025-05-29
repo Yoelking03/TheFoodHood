@@ -16,17 +16,27 @@
       <p>{{ pedido.descripcion }}</p>
       <p>Precio: RD${{ pedido.precio }}</p>
       <p>Cantidad: <strong>{{ pedido.cantidad }}</strong></p>
+      <p>Tipo de entrega: {{ pedido.tipo_entrega }}</p>
+      <p>Dirección de entrega: {{ pedido.direccion_entrega }}</p>
+
       <div class="status-container {{ pedido.estado.toLowerCase().replace(' ', '') }}">
         🚛 {{ pedido.estado | titlecase }}
       </div>
-
-      <!-- Datos del cliente para repartidor -->
-      <div *ngIf="tipoUsuario === 'repartidor' && pedido.nombre_usuario">
+      <!-- Datos del cliente visibles para admin y repartidor -->
+      <div *ngIf="(tipoUsuario === 'repartidor' || tipoUsuario === 'administrador') && pedido.nombre_usuario">
         <p><strong>Cliente:</strong> {{ pedido.nombre_usuario }}</p>
-        <p><strong>Dirección/Ubicación:</strong> {{ pedido.direccion }}</p>
+        <p><strong>Teléfono:</strong> {{ pedido.telefono_usuario }}</p>
+        <ion-item lines="none">
+          <ion-label>
+            <strong>Dirección/Ubicación:</strong> {{ pedido.direccion }}
+          </ion-label>
+          <ion-button fill="clear" size="small" slot="end" (click)="copiarDireccion(pedido.direccion)">
+            <ion-icon name="copy-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
       </div>
 
-      <!-- Código para clientes con delivery -->
+      <!-- Código de entrega visible para cliente -->
       <div *ngIf="tipoUsuario === 'cliente' && pedido.tipo_entrega === 'delivery' && pedido.codigo">
         <ion-item lines="none">
           <ion-label>
@@ -36,7 +46,7 @@
         </ion-item>
       </div>
 
-      <!-- Confirmar código de entrega para cliente -->
+      <!-- Cliente confirma entrega -->
       <div *ngIf="tipoUsuario === 'cliente' && pedido.tipo_entrega === 'delivery' && pedido.estado === 'en camino' && pedido.codigo">
         <ion-item lines="none">
           <ion-label position="floating">Confirmar código de entrega</ion-label>
@@ -47,26 +57,25 @@
         </ion-button>
       </div>
 
-      <!-- Administrador cambia estado -->
-      <div *ngIf="tipoUsuario === 'administrador'">
+      <!-- ADMINISTRADOR: Actualiza estado solo si no lo tomó delivery -->
+      <div *ngIf="tipoUsuario === 'administrador' && !pedido.id_delivery">
         <ion-item lines="none">
           <ion-label position="stacked">Actualizar Estado</ion-label>
           <ion-select interface="popover" [(ngModel)]="pedido.estado" (ionChange)="cambiarEstado(pedido)">
             <ion-select-option value="pendiente">🕓 Pendiente</ion-select-option>
             <ion-select-option value="preparando">👨‍🍳 Preparando</ion-select-option>
             <ion-select-option *ngIf="pedido.tipo_entrega === 'delivery'" value="para entrega">📦 Para Entrega</ion-select-option>
-            <ion-select-option *ngIf="pedido.tipo_entrega === 'pasar a buscar'" value="listo">✅ Listo</ion-select-option>
-            <ion-select-option *ngIf="pedido.tipo_entrega === 'pasar a buscar'" value="entregado">✅ Entregado</ion-select-option>
+            <ion-select-option *ngIf="pedido.tipo_entrega === 'recoger'" value="listo">✅ Listo</ion-select-option>
+            <ion-select-option *ngIf="pedido.tipo_entrega === 'recoger'" value="entregado">✅ Entregado</ion-select-option>
           </ion-select>
         </ion-item>
 
-        <!-- Marcar como recogido -->
         <ion-button *ngIf="pedido.estado === 'listo' && pedido.tipo_entrega === 'pasar a buscar'" expand="block" color="success" (click)="marcarComoRecogido(pedido)">
           Recogido
         </ion-button>
       </div>
 
-      <!-- Repartidor acepta o actualiza estado -->
+      <!-- REPARTIDOR: Aceptar pedido o actualizar estado si ya lo tomó -->
       <div *ngIf="tipoUsuario === 'repartidor'">
         <ion-button *ngIf="pedido.estado === 'para entrega' && !pedido.id_delivery" expand="block" color="primary" (click)="aceptarPedido(pedido)">
           Aceptar entrega

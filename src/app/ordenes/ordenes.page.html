@@ -8,6 +8,39 @@
     </div>
   </ion-toolbar>
 
+  <div class="pedidos-grid">
+    <div *ngFor="let pedido of pedidos" class="pedido-card">
+      <img [src]="pedido.imagen" alt="Producto" />
+      <h3>{{ pedido.nombre }}</h3>
+      <p>{{ pedido.descripcion }}</p>
+      <p>Precio: RD${{ pedido.precio }}</p>
+      <p>Cantidad: <strong>{{ pedido.cantidad }}</strong></p>
+
+      <div class="status-container {{ pedido.estado.toLowerCase().replace(' ', '') }}">
+        🚛 {{ pedido.estado | titlecase }}
+      </div>
+
+      <!-- Datos del cliente -->
+      <div>
+        <p><strong>Cliente:</strong> {{ pedido.nombre_usuario }}</p>
+        <p><strong>Teléfono:</strong> {{ pedido.telefono_usuario }}</p>
+        <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+      </div>
+
+      <!-- Repartidor puede actualizar estado solo si él aceptó -->
+      <div *ngIf="pedido.id_delivery === idUsuario">
+        <ion-item lines="none">
+          <ion-label position="stacked">Actualizar Estado</ion-label>
+          <ion-select interface="popover" [(ngModel)]="pedido.estado" (ionChange)="cambiarEstadoRepartidor(pedido)">
+            <ion-select-option value="en camino">🚚 En Camino</ion-select-option>
+            <ion-select-option value="entregado">✅ Entregado</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
 
 
 

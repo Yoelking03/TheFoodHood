@@ -1,0 +1,86 @@
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
+
+.pedido-card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.pedido-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.pedido-titulo {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 8px;
+  color: #d32f2f;
+}
+
+.pedido-desc {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #444;
+}
+
+.pedido-cantidad {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+/* ======= ESTADO VISUAL ======= */
+.status-container {
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 10px;
+  color: white;
+  margin: 5px 0;
+}
+
+/* Estilos por estado */
+.status-container.pendiente {
+  background-color: #ff9800;
+}
+.status-container.preparando {
+  background-color: #03a9f4;
+}
+.status-container.paraentrega {
+  background-color: #9c27b0;
+}
+.status-container.aceptado {
+  background-color: #2196f3;
+}
+.status-container.encamino {
+  background-color: #3f51b5;
+}
+.status-container.entregado {
+  background-color: #4caf50;
+}
+
+/* INPUTS & ESTADO */
+.estado-item {
+  margin-top: 8px;
+}
+
+.estado-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.estado-select {
+  background: #f8f8f8;
+  border-radius: 10px;
+}

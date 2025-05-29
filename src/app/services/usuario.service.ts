@@ -7,22 +7,21 @@ import supabase from './supabaseClient';
 export class UsuarioService {
   constructor() {}
 
-// REGISTRAR USUARIO EN TABLA PERSONALIZADA
-async registrarUsuario(data: any) {
-  // Asegura que el teléfono se guarde como texto
-  if (typeof data.telefono !== 'string') {
-    data.telefono = String(data.telefono);
+  // ✅ REGISTRAR NUEVO USUARIO
+  async registrarUsuario(data: any) {
+    if (typeof data.telefono !== 'string') {
+      data.telefono = String(data.telefono);
+    }
+
+    const { data: resultado, error } = await supabase
+      .from('usuarios')
+      .insert([data])
+      .select();
+
+    return { data: resultado, error };
   }
 
-  const { data: resultado, error } = await supabase
-    .from('usuarios')
-    .insert([data])
-    .select();
-
-  return { data: resultado, error }; // ← Retorna ambos
-}
-
-  // LOGIN DIRECTO
+  // ✅ LOGIN MANUAL CON CORREO Y CONTRASEÑA
   async login(correo: string, contrasena: string) {
     const { data, error } = await supabase
       .from('usuarios')
@@ -34,7 +33,6 @@ async registrarUsuario(data: any) {
     return { data, error };
   }
 
-  // OBTENER USUARIO POR ID
   async obtenerUsuarioPorId(id: number | string) {
     const { data, error } = await supabase
       .from('usuarios')
@@ -42,40 +40,44 @@ async registrarUsuario(data: any) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error || !data) {
+      console.warn('No se encontró el usuario con ID:', id);
+      return null;
+    }
+
     return data;
   }
-  
 
 
+  // ✅ ACTUALIZAR DATOS DEL USUARIO (nombre, correo, etc.)
   async actualizarUsuario(id: string, datos: any) {
-  const { data, error } = await supabase
-    .from('usuarios')
-    .update(datos)
-    .eq('id', id)
-    .select()
-    .single();
+    const { data, error } = await supabase
+      .from('usuarios')
+      .update(datos)
+      .eq('id', id)
+      .select()
+      .single();
 
-  return { data, error };
+    return { data, error };
   }
 
-
-  async recuperarContrasena(correo: string) {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(correo, {
-    redirectTo: 'http://localhost:8100/reset-password'
-  });
-
-  if (error) throw error;
-  return data;
-  }
- 
+  // ✅ ACTUALIZAR UBICACIÓN ACTUAL DEL USUARIO
   async actualizarUbicacion(id: string, ubicacion: string) {
-  const { error } = await supabase
-    .from('usuarios')
-    .update({ ubicacion_actual: ubicacion })
-    .eq('id', id);
+    const { error } = await supabase
+      .from('usuarios')
+      .update({ ubicacion_actual: ubicacion })
+      .eq('id', id);
 
     return { error };
   }
 
+  // ✅ ENVIAR CORREO PARA RECUPERACIÓN DE CONTRASEÑA
+  async recuperarContrasena(correo: string) {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(correo, {
+      redirectTo: 'http://localhost:8100/reset-password' // cambia esto si usas hosting real
+    });
+
+    if (error) throw error;
+    return data;
+  }
 }

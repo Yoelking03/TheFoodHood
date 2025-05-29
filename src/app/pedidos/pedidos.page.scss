@@ -52,23 +52,6 @@
   margin-bottom: 5px;
 }
 
-/* ESTADO */
-.status-container {
-  border: 2px solid white;
-  border-radius: 14px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  margin-top: 8px;
-}
-
-.status-container::before {
-  content: "🚚 ";
-  margin-right: 4px;
-}
-
 /* COLORES SEGÚN ESTADO */
 .status-container.pendiente { background-color: gray; }
 .status-container.preparando { background-color: orange; }
@@ -123,3 +106,61 @@
   0% { transform: scale(0); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+
+
+/* ===== ESTILO PARA ESTADO DEL PEDIDO ===== */
+.status-container {
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.status-container.pendiente {
+  background-color: #ff9800;
+}
+.status-container.preparando {
+  background-color: #03a9f4;
+}
+.status-container.paraentrega {
+  background-color: #9c27b0;
+}
+.status-container.aceptado {
+  background-color: #2196f3;
+}
+.status-container.encamino {
+  background-color: #3f51b5;
+}
+.status-container.entregado {
+  background-color: #4caf50;
+}
+
+
+/* ===== ESTILO PARA ION-ITEM DE DIRECCIÓN COPIABLE ===== */
+ion-item {
+  --background: #f5f5f5;
+  --inner-padding-end: 12px;
+  --padding-start: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+
+
+ion-button[fill='clear'] {
+  color: #e53935;
+  font-size: 1.2rem;
+  padding: 6px;
+  margin-left: 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+ion-button[fill='clear']:hover {
+  background-color: rgba(229, 57, 53, 0.1);
+}
+
