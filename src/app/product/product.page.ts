@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
+import { PedidoService } from 'src/app/services/pedido.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,10 +17,12 @@ export class ProductPage implements OnInit {
   cantidadPedidos: number = 0;
   cantidadAnterior: number = 0;
   badgeAnimar: boolean = false;
+  idUsuario: number = 0;
+  
 
 
 
-  constructor(private router: Router, private productoService: ProductoService,) { }
+  constructor(private router: Router, private productoService: ProductoService, private pedidoService: PedidoService) { }
 
   ngOnInit() {
     const usuarioStr = localStorage.getItem('usuario');
@@ -28,6 +31,7 @@ export class ProductPage implements OnInit {
       this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
     }
     this.cargarProductos();
+    this.actualizarContadorPedidos();
   
   
   }
@@ -73,5 +77,20 @@ export class ProductPage implements OnInit {
       alert('No se pudo eliminar el producto. Intenta más tarde.');
     }
   }
+
+    async actualizarContadorPedidos() {
+    const usuarioStr = localStorage.getItem('usuario');
+    if (!usuarioStr) return;
+
+    const usuario = JSON.parse(usuarioStr);
+    this.idUsuario = usuario.id;
+
+    const { data } = await this.pedidoService.obtenerPedidos();
+    if (!data) return;
+
+    const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+    this.cantidadPedidos = pedidosValidos.length;
+   }
+
 
 }

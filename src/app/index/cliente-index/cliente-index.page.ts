@@ -101,14 +101,14 @@ export class ClienteIndexPage implements OnInit {
     const claveCarrito = `carrito_${this.idUsuario}`;
     const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
 
-    // Buscar si ya está el producto en el carrito por su id_producto
+  
     const index = carrito.findIndex((item: any) => item.id_producto === producto.id);
 
     if (index !== -1) {
-      // Ya existe → aumentar cantidad
+      
       carrito[index].cantidad += 1;
     } else {
-      // Nuevo producto → agregar con campos adecuados
+      
       carrito.push({
         ...producto,
         id_producto: producto.id,
@@ -117,13 +117,13 @@ export class ClienteIndexPage implements OnInit {
       });
     }
 
-    // Guardar carrito actualizado
+    
     localStorage.setItem(claveCarrito, JSON.stringify(carrito));
 
-    // Actualizar contador global
+    
     this.actualizarContadorCarrito();
 
-    // Mostrar mensaje
+    
     this.mostrarToast('Producto agregado al carrito');
   }
 
@@ -154,7 +154,7 @@ export class ClienteIndexPage implements OnInit {
         {
           text: 'OK',
           handler: () => {
-            this.router.navigate(['/register']); // Ajusta la ruta si es diferente
+            this.router.navigate(['/register']); 
           }
         }
       ]
@@ -169,12 +169,19 @@ export class ClienteIndexPage implements OnInit {
 
     const usuario = JSON.parse(usuarioStr);
     this.idUsuario = usuario.id;
+    this.tipoUsuario = usuario.tipo_usuario?.toLowerCase();
 
-    const { data } = await this.pedidoService.obtenerPedidos();
+    if (this.tipoUsuario === 'invitado') {
+      this.cantidadPedidos = 0;
+      return;
+    }
+
+    const { data } = await this.pedidoService.obtenerPedidosPorUsuario(this.idUsuario);
     if (!data) return;
 
     const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
     this.cantidadPedidos = pedidosValidos.length;
   }
+
 
 }

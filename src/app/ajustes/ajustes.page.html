@@ -42,7 +42,7 @@
     </div>
 
   <!-- BOTÓN para activar edición -->
-  <ion-button expand="block" color="danger" (click)="activarEdicion()" *ngIf="!modoEdicion && (tipoUsuario === 'administrador' || tipoUsuario === 'repartidor')">
+  <ion-button expand="block" color="danger" (click)="activarEdicion()" *ngIf="!modoEdicion && (tipoUsuario === 'administrador' || tipoUsuario === 'repartidor' || tipoUsuario === 'cliente')">
     EDITAR DATOS
   </ion-button>
 

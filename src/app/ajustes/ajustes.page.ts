@@ -176,13 +176,20 @@ export class AjustesPage implements OnInit {
 
     const usuario = JSON.parse(usuarioStr);
     this.idUsuario = usuario.id;
+    this.tipoUsuario = usuario.tipo_usuario?.toLowerCase();
 
-    const { data } = await this.pedidoService.obtenerPedidos();
+    if (this.tipoUsuario === 'invitado') {
+      this.cantidadPedidos = 0;
+      return;
+    }
+
+    const { data } = await this.pedidoService.obtenerPedidosPorUsuario(this.idUsuario);
     if (!data) return;
 
     const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
     this.cantidadPedidos = pedidosValidos.length;
   }
+
 
 
 
