@@ -16,7 +16,7 @@ export class RegisterPage {
   contrasena: string = '';
   telefono: string = '';
   direccion: string = '';
-  tipo_usuario: string = '';
+  tipo_usuario: string = 'cliente';
 
   constructor(
     private usuarioService: UsuarioService,

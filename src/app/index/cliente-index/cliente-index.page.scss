@@ -154,16 +154,4 @@ ion-searchbar {
   position: relative;
 }
 
-.carrito-badge {
-  position: absolute;
-  top: 2px;
-  right: 18px;
-  font-size: 11px;
-  z-index: 10;
-  animation: aparecer .3s ease;
-}
 
-@keyframes aparecer {
-  0% { transform: scale(0); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}

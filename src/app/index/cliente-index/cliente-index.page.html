@@ -3,7 +3,11 @@
   <ion-toolbar color="danger" class="header-menu">
     <img src="assets/img/logo.png" alt="logo" class="logo-img" />
     <h1 class="menu-title">Menú</h1>
-    <div class="user-info"><span>Usuario</span></div>
+    <div class="user-info">
+      <span *ngIf="tipoUsuario === 'cliente'">Usuario</span>
+      <span *ngIf="tipoUsuario === 'invitado'">Invitado</span>
+    </div>
+    
   </ion-toolbar>
 
   <div class="productos-search">
@@ -45,10 +49,11 @@
         </div>
         <div class="producto-footer">
           <span class="precio">RD$ {{ producto.precio | number:'1.2-2' }}</span>
-
+          
           <!-- Solo el cliente ve el botón de carrito -->
-          <button *ngIf="tipoUsuario === 'cliente'" class="btn-carrito" (click)="agregarAlCarrito(producto)">
-            <ion-icon name="cart-outline"></ion-icon>
+          <button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'invitado'" class="btn-carrito"
+          (click)="tipoUsuario === 'cliente' ? agregarAlCarrito(producto) : mostrarAlertaRegistro()">
+          <ion-icon name="cart-outline"></ion-icon>
           </button>
         </div>
       </div>
@@ -61,10 +66,11 @@
         <ion-tab-bar slot="bottom">
           <ion-tab-button [routerLink]="'/pedidos'">
             <ion-icon name="list-outline"></ion-icon>
+            <ion-badge *ngIf="cantidadPedidos > 0">{{ cantidadPedidos  }}</ion-badge>
             <ion-label>Pedidos</ion-label>
           </ion-tab-button>
 
-          <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
+          <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'invitado' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
             <ion-icon name="home-outline"></ion-icon>
             <ion-label>Inicio</ion-label>
           </ion-tab-button>

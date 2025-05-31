@@ -9,6 +9,7 @@ import { UsuarioService } from '../services/usuario.service';
 })
 export class IndexPage implements OnInit {
   tipoUsuario: string = "";
+   idUsuario: number = 0;
 
   constructor(
     private router: Router,
@@ -16,17 +17,25 @@ export class IndexPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-
     const usuarioStr = localStorage.getItem('usuario');
-    if (usuarioStr) {
-      const usuario = JSON.parse(usuarioStr);
-      this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
 
-    const userStr = localStorage.getItem('usuario');
-    const user = userStr ? JSON.parse(userStr) : null;
+    if (!usuarioStr) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const usuario = JSON.parse(usuarioStr);
+    this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
+    this.idUsuario = usuario.id;
+
+    // 👉 Si es invitado, redirige directamente a cliente-index
+    if (this.tipoUsuario === 'invitado') {
+      this.router.navigate(['/index/cliente-index']);
+      return;
+    }
 
     try {
-      const data = await this.usuarioService.obtenerUsuarioPorId(user.id);
+      const data = await this.usuarioService.obtenerUsuarioPorId(usuario.id);
       const tipo = data.tipo_usuario.toLowerCase();
 
       if (tipo === 'administrador') {
@@ -34,16 +43,16 @@ export class IndexPage implements OnInit {
       } else if (tipo === 'cliente') {
         this.router.navigate(['/index/cliente-index']);
       } else if (tipo === 'repartidor') {
-      this.router.navigate(['/ordenes']);
-      } else {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/index/repartidor-index']);
       }
     } catch (error) {
-      console.error('Error al obtener usuario:', error);
+      console.error('Error al obtener el usuario:', error);
       this.router.navigate(['/login']);
     }
   }
 
-}
+
+
+
 }
 

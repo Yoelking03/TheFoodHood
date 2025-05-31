@@ -21,6 +21,8 @@ export class PedidosPage implements OnInit {
   cantidadPedidos: number = 0;
   cantidadAnterior: number = 0;
   badgeAnimar: boolean = false;
+ 
+
 
   constructor(
     private productoService: ProductoService,
@@ -38,70 +40,76 @@ export class PedidosPage implements OnInit {
       this.idUsuario = usuario.id;
       this.nombreUsuario = usuario.nombre;
       this.actualizarContadorCarrito();
+      this.actualizarContadorPedidos();
     }
   }
 
   async ionViewWillEnter() {
-    await this.cargarPedidos();
-    await this.obtenerCantidadPedidos();
+  await this.cargarPedidos();
+  this.actualizarContadorPedidos();
   }
 
-async cargarPedidos() {
-  try {
-    const { data: productos } = await this.productoService.obtenerProductos();
-    this.productos = productos || [];
-
-    const { data: pedidosRaw } = await this.pedidoService.obtenerPedidos();
-    const pedidos = pedidosRaw || [];
-
-    const detallesRes = await this.detallepedidoService.obtenerDetallesPedidos();
-    const detalles = detallesRes.data || [];
-
-    // Filtra los pedidos que aún no se han entregado o recogido
-    let pedidosFiltrados = pedidos.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
-
-    if (this.tipoUsuario === 'cliente') {
-      pedidosFiltrados = pedidosFiltrados.filter(p => p.id_usuario === this.idUsuario);
-    } else if (this.tipoUsuario === 'repartidor') {
-      pedidosFiltrados = pedidosFiltrados.filter(p =>
-        (!p.id_delivery && p.estado === 'para entrega')
-      );
-    } else if (this.tipoUsuario === 'administrador') {
-      // No cambia, muestra todos los pedidos activos
+  async cargarPedidos() {
+    // 🚫 Si es invitado, no debe cargar pedidos
+    if (this.tipoUsuario === 'invitado') {
+      this.pedidos = [];
+      return;
     }
 
-    this.pedidos = [];
+    try {
+      const { data: productos } = await this.productoService.obtenerProductos();
+      this.productos = productos || [];
 
-    for (const p of pedidosFiltrados) {
-      const detalle = detalles.find(
-        (d, i, arr) => d.id_pedido === p.id && arr.findIndex(x => x.id_pedido === d.id_pedido) === i
-      );
+      const { data: pedidosRaw } = await this.pedidoService.obtenerPedidos();
+      const pedidos = pedidosRaw || [];
 
-      const producto = this.productos.find(prod => prod.id === detalle?.id_producto);
-      const usuario = await this.usuarioService.obtenerUsuarioPorId(p.id_usuario);
+      const detallesRes = await this.detallepedidoService.obtenerDetallesPedidos();
+      const detalles = detallesRes.data || [];
 
-      this.pedidos.push({
-        ...p,
-        nombre: producto?.nombre || 'Producto',
-        descripcion: producto?.descripcion || 'Sin descripción',
-        imagen: producto?.imagen || 'assets/img/default.png',
-        precio: producto?.precio || 0,
-        cantidad: detalle?.cantidad || 1,
-        codigoIngresado: '',
-        nombre_usuario: usuario?.nombre || '',
-        telefono_usuario: usuario?.telefono || '',
-        direccion: p.direccion_entrega || 'No disponible',
-      });
+      // Filtra los pedidos que aún no se han entregado o recogido
+      let pedidosFiltrados = pedidos.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+
+      if (this.tipoUsuario === 'cliente') {
+        pedidosFiltrados = pedidosFiltrados.filter(p => p.id_usuario === this.idUsuario);
+      } else if (this.tipoUsuario === 'repartidor') {
+        pedidosFiltrados = pedidosFiltrados.filter(p =>
+          (!p.id_delivery && p.estado === 'para entrega')
+        );
+      } // Administrador ve todos los pedidos activos
+
+      this.pedidos = [];
+
+      for (const p of pedidosFiltrados) {
+        const detalle = detalles.find(
+          (d, i, arr) => d.id_pedido === p.id && arr.findIndex(x => x.id_pedido === d.id_pedido) === i
+        );
+
+        const producto = this.productos.find(prod => prod.id === detalle?.id_producto);
+        const usuario = await this.usuarioService.obtenerUsuarioPorId(p.id_usuario);
+
+        this.pedidos.push({
+          ...p,
+          nombre: producto?.nombre || 'Producto',
+          descripcion: producto?.descripcion || 'Sin descripción',
+          imagen: producto?.imagen || 'assets/img/default.png',
+          precio: producto?.precio || 0,
+          cantidad: detalle?.cantidad || 1,
+          codigoIngresado: '',
+          nombre_usuario: usuario?.nombre || '',
+          telefono_usuario: usuario?.telefono || '',
+          direccion: p.direccion_entrega || 'No disponible',
+        });
+      }
+
+      if (this.tipoUsuario === 'cliente') {
+        console.log('📦 Pedidos del cliente:', this.pedidos);
+      }
+
+    } catch (error) {
+      console.error('❌ Error al cargar pedidos:', error);
     }
-
-    if (this.tipoUsuario === 'cliente') {
-      console.log('📦 Pedidos del cliente:', this.pedidos);
-    }
-
-  } catch (error) {
-    console.error('❌ Error al cargar pedidos:', error);
   }
-}
+
 
 
   async cambiarEstado(pedido: any) {
@@ -252,5 +260,22 @@ async cargarPedidos() {
       toast.present();
     }
   }
+
+actualizarContadorPedidos() {
+  const nuevaCantidad = this.pedidos.length;
+
+  if (nuevaCantidad !== this.cantidadPedidos) {
+    this.badgeAnimar = true;
+    setTimeout(() => this.badgeAnimar = false, 1000);
+  }
+
+  this.cantidadAnterior = this.cantidadPedidos;
+  this.cantidadPedidos = nuevaCantidad;
+}
+
+
+
+
+
 
 }

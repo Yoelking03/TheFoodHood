@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { UsuarioService } from '../services/usuario.service';
+import { PedidoService } from 'src/app/services/pedido.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,11 +22,13 @@ export class AjustesPage implements OnInit {
     telefono: '',
     direccion: '' };
     contadorCarrito: number = 0;
+    cantidadPedidos: number = 0;
+    idUsuario: number = 0;
     
 
 
   constructor(
-    private toastCtrl: ToastController, private usuarioService: UsuarioService,   private router: Router) {
+    private toastCtrl: ToastController, private usuarioService: UsuarioService, private pedidoService: PedidoService,   private router: Router) {
 
    }
 
@@ -43,8 +46,11 @@ export class AjustesPage implements OnInit {
         direccion: usuario.direccion || ''
       };
        this.actualizarContadorCarrito();
+       this.actualizarContadorPedidos();
     }
   }
+
+
 
   
   private async mostrarToast(message: string, color: string) {
@@ -153,16 +159,31 @@ export class AjustesPage implements OnInit {
   }
 
   actualizarContadorCarrito() {
-  const usuarioStr = localStorage.getItem('usuario');
-  if (usuarioStr) {
-    const usuario = JSON.parse(usuarioStr);
-    const idUsuario = usuario.id;
-    const claveCarrito = `carrito_${idUsuario}`;
-    const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
-    this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
-  } else {
-    this.contadorCarrito = 0;
+    const usuarioStr = localStorage.getItem('usuario');
+    if (usuarioStr) {
+      const usuario = JSON.parse(usuarioStr);
+      const idUsuario = usuario.id;
+      const claveCarrito = `carrito_${idUsuario}`;
+      const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+      this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
+    } else {
+      this.contadorCarrito = 0;
+    }
   }
-}
+  async actualizarContadorPedidos() {
+    const usuarioStr = localStorage.getItem('usuario');
+    if (!usuarioStr) return;
+
+    const usuario = JSON.parse(usuarioStr);
+    this.idUsuario = usuario.id;
+
+    const { data } = await this.pedidoService.obtenerPedidos();
+    if (!data) return;
+
+    const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+    this.cantidadPedidos = pedidosValidos.length;
+  }
+
+
 
 }

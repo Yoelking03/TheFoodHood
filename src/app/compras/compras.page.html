@@ -91,11 +91,10 @@
   <ion-toolbar color="danger">
     <ion-tabs>
       <ion-tab-bar slot="bottom">
-
         <ion-tab-button [routerLink]="'/pedidos'">
           <ion-icon name="list-outline"></ion-icon>
+          <ion-badge *ngIf="cantidadPedidos > 0">{{ cantidadPedidos }}</ion-badge>
           <ion-label>Pedidos</ion-label>
-
         </ion-tab-button>
 
         <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
@@ -110,7 +109,7 @@
 
         <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
           <ion-icon name="cart-outline"></ion-icon>
-          <ion-badge *ngIf="contadorCarrito > 0" class="carrito-badge">{{ contadorCarrito }}</ion-badge>
+          <ion-badge *ngIf="contadorCarrito > 0">{{ contadorCarrito }}</ion-badge>
           <ion-label>Compras</ion-label>
         </ion-tab-button>
 

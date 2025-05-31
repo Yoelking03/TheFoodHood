@@ -91,6 +91,21 @@
 }
 /*BODY*/
 
+ion-badge {
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 50%;
+  padding: 6px 9px;
+  background: linear-gradient(145deg, #00e1ff, #6002f8);
+  color: white;
+  box-shadow: 0 0 8px rgba(0, 204, 255, 0.6);
+  animation: pulso 1.2s infinite;
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  z-index: 10;
+}
+
 
 
 

@@ -20,6 +20,7 @@ export class ComprasPage implements OnInit {
   contadorCarrito: number = 0;
   tipoUsuario: string = '';
   idUsuario: number = 0;
+  cantidadPedidos: number = 0;
 
   constructor(
     private pedidoService: PedidoService,
@@ -29,19 +30,29 @@ export class ComprasPage implements OnInit {
     private usuarioService: UsuarioService,
   ) {}
   
-
   ngOnInit() {
     const usuarioStr = localStorage.getItem('usuario');
     if (usuarioStr) {
       const usuario = JSON.parse(usuarioStr);
       this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
       this.idUsuario = usuario.id;
+
+      // ✅ Solo carga el carrito después de tener el ID
+      this.cargarCarrito();
+      this.actualizarContadorPedidos();
+      
     }
-    this.cargarCarrito();
   }
+
 
   ionViewWillEnter() {
   this.cargarCarrito();
+  }
+
+  actualizarContadorCarrito() {
+  const claveCarrito = `carrito_${this.idUsuario}`;
+  const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+  this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
   }
 
   cargarCarrito() {
@@ -266,4 +277,19 @@ async realizarCompra(tipoEntrega: string) {
       toast.present();
     }
   }
+  async actualizarContadorPedidos() {
+  const usuarioStr = localStorage.getItem('usuario');
+  if (!usuarioStr) return;
+
+  const usuario = JSON.parse(usuarioStr);
+  this.idUsuario = usuario.id;
+
+  const { data } = await this.pedidoService.obtenerPedidosPorUsuario(this.idUsuario);
+  if (!data) return;
+
+  const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+  this.cantidadPedidos = pedidosValidos.length;
+  }
+
+
 }

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
-import { PedidoService } from 'src/app/services/pedido.service';
 import { ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
+import { PedidoService } from 'src/app/services/pedido.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-cliente-index',
@@ -18,12 +21,17 @@ export class ClienteIndexPage implements OnInit {
   contadorCarrito: number = 0;
   searchTerm: string = '';
   categoriaSeleccionada: string = 'Todos';
+  cantidadPedidos: number = 0;
+
+
 
 
   constructor(
     private productoService: ProductoService,
+    private toastController: ToastController,
+    private alertController: AlertController,
     private pedidoService: PedidoService,
-    private toastController: ToastController
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -34,7 +42,7 @@ export class ClienteIndexPage implements OnInit {
       this.idUsuario = usuario.id;
       this.cargarProductos();
       this.filtrarProductos1();
-      this.actualizarContadorCarrito();
+      this.actualizarContadorPedidos();
     }
 
     this.categorias = [
@@ -89,50 +97,84 @@ export class ClienteIndexPage implements OnInit {
    
   }
 
-agregarAlCarrito(producto: any) {
-  const claveCarrito = `carrito_${this.idUsuario}`;
-  const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+  agregarAlCarrito(producto: any) {
+    const claveCarrito = `carrito_${this.idUsuario}`;
+    const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
 
-  // Buscar si ya está el producto en el carrito por su id_producto
-  const index = carrito.findIndex((item: any) => item.id_producto === producto.id);
+    // Buscar si ya está el producto en el carrito por su id_producto
+    const index = carrito.findIndex((item: any) => item.id_producto === producto.id);
 
-  if (index !== -1) {
-    // Ya existe → aumentar cantidad
-    carrito[index].cantidad += 1;
-  } else {
-    // Nuevo producto → agregar con campos adecuados
-    carrito.push({
-      ...producto,
-      id_producto: producto.id,
-      cantidad: 1,
-      seleccionado: true
-    });
+    if (index !== -1) {
+      // Ya existe → aumentar cantidad
+      carrito[index].cantidad += 1;
+    } else {
+      // Nuevo producto → agregar con campos adecuados
+      carrito.push({
+        ...producto,
+        id_producto: producto.id,
+        cantidad: 1,
+        seleccionado: true
+      });
+    }
+
+    // Guardar carrito actualizado
+    localStorage.setItem(claveCarrito, JSON.stringify(carrito));
+
+    // Actualizar contador global
+    this.actualizarContadorCarrito();
+
+    // Mostrar mensaje
+    this.mostrarToast('Producto agregado al carrito');
   }
 
-  // Guardar carrito actualizado
-  localStorage.setItem(claveCarrito, JSON.stringify(carrito));
 
-  // Actualizar contador global
-  this.actualizarContadorCarrito();
+  actualizarContadorCarrito() {
+    const claveCarrito = `carrito_${this.idUsuario}`;
+    const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
+    this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
+  }
 
-  // Mostrar mensaje
-  this.mostrarToast('Producto agregado al carrito');
-}
+  async mostrarToast(mensaje: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 1500,
+      color: 'success',
+    });
+    await toast.present();
+  }
+  async mostrarAlertaRegistro() {
+    const alert = await this.alertController.create({
+      header: 'Atención',
+      message: 'Para realizar pedidos debes registrarte.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            this.router.navigate(['/register']); // Ajusta la ruta si es diferente
+          }
+        }
+      ]
+    });
 
+    await alert.present();
+  }
 
-actualizarContadorCarrito() {
-  const claveCarrito = `carrito_${this.idUsuario}`;
-  const carrito = JSON.parse(localStorage.getItem(claveCarrito) || '[]');
-  this.contadorCarrito = carrito.reduce((total: number, item: any) => total + item.cantidad, 0);
-}
+  async actualizarContadorPedidos() {
+    const usuarioStr = localStorage.getItem('usuario');
+    if (!usuarioStr) return;
 
-async mostrarToast(mensaje: string) {
-  const toast = await this.toastController.create({
-    message: mensaje,
-    duration: 1500,
-    color: 'success',
-  });
-  await toast.present();
-}
+    const usuario = JSON.parse(usuarioStr);
+    this.idUsuario = usuario.id;
+
+    const { data } = await this.pedidoService.obtenerPedidos();
+    if (!data) return;
+
+    const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+    this.cantidadPedidos = pedidosValidos.length;
+  }
 
 }

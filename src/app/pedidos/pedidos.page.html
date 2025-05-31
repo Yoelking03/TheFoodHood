@@ -6,6 +6,7 @@
       <span *ngIf="tipoUsuario === 'administrador'">Admin</span>
       <span *ngIf="tipoUsuario === 'cliente'">Usuario</span>
       <span *ngIf="tipoUsuario === 'repartidor'">Repartidor</span>
+      <span *ngIf="tipoUsuario === 'invitado'">Invitado</span>
     </div>
   </ion-toolbar>
 
@@ -115,7 +116,7 @@
           <ion-label>Pedidos</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'invitado' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
           <ion-icon name="home-outline"></ion-icon>
           <ion-label>Inicio</ion-label>
         </ion-tab-button>
@@ -127,7 +128,7 @@
 
         <ion-tab-button *ngIf="tipoUsuario === 'cliente'" [routerLink]="'/compras'">
           <ion-icon name="cart-outline"></ion-icon>
-          <ion-badge *ngIf="contadorCarrito > 0" class="carrito-badge">{{ contadorCarrito }}</ion-badge>
+          <ion-badge *ngIf="contadorCarrito > 0" >{{ contadorCarrito }}</ion-badge>
           <ion-label>Compras</ion-label>
         </ion-tab-button>
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
+import { PedidoService } from 'src/app/services/pedido.service';
 
 
 @Component({
@@ -17,10 +18,11 @@ export class AdminIndexPage implements OnInit {
   contadorCarrito: number = 0;
   searchTerm: string = '';
   categoriaSeleccionada: string = 'Todos';
+  cantidadPedidos: number = 0;
   
 
 
-  constructor(private productoService: ProductoService,) { }
+  constructor(private productoService: ProductoService, private pedidoService: PedidoService) { }
 
   async ngOnInit() {
     const usuarioStr = localStorage.getItem('usuario');
@@ -29,6 +31,7 @@ export class AdminIndexPage implements OnInit {
       this.tipoUsuario = usuario.tipo_usuario?.toLowerCase() || '';
       this.cargarProductos();
       this.filtrarProductos1();
+      this.actualizarContadorPedidos();
     }
     
     this.categorias = [
@@ -76,8 +79,20 @@ export class AdminIndexPage implements OnInit {
         producto.descripcion?.toLowerCase().includes(termino);
       return coincideCategoria && coincideBusqueda;
     });
-
-   
   }
+  async actualizarContadorPedidos() {
+    const usuarioStr = localStorage.getItem('usuario');
+    if (!usuarioStr) return;
+
+    const usuario = JSON.parse(usuarioStr);
+    this.idUsuario = usuario.id;
+
+    const { data } = await this.pedidoService.obtenerPedidos();
+    if (!data) return;
+
+    const pedidosValidos = data.filter(p => p.estado !== 'entregado' && p.estado !== 'recogido');
+    this.cantidadPedidos = pedidosValidos.length;
+   }
+
 
 }

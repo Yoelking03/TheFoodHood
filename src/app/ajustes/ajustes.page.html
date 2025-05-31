@@ -7,6 +7,7 @@
       <span *ngIf="tipoUsuario === 'administrador'">Admin</span>
       <span *ngIf="tipoUsuario === 'cliente'">Usuario</span>
       <span *ngIf="tipoUsuario === 'repartidor'">Repartidor</span>
+      <span *ngIf="tipoUsuario === 'invitado'">Invitado</span>
     </div>
   </ion-toolbar>
 
@@ -41,9 +42,10 @@
     </div>
 
   <!-- BOTÓN para activar edición -->
-  <ion-button expand="block" color="danger" (click)="activarEdicion()"  *ngIf="!modoEdicion" >
+  <ion-button expand="block" color="danger" (click)="activarEdicion()" *ngIf="!modoEdicion && (tipoUsuario === 'administrador' || tipoUsuario === 'repartidor')">
     EDITAR DATOS
   </ion-button>
+
 
   <!-- NOMBRE -->
   <ion-item class="campo-input" *ngIf="modoEdicion">   
@@ -219,14 +221,13 @@
   <ion-toolbar color="danger">
     <ion-tabs>
       <ion-tab-bar slot="bottom">
-
         <ion-tab-button [routerLink]="'/pedidos'">
           <ion-icon name="list-outline"></ion-icon>
+          <ion-badge *ngIf="cantidadPedidos > 0">{{ cantidadPedidos }}</ion-badge>
           <ion-label>Pedidos</ion-label>
-
         </ion-tab-button>
 
-        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
+        <ion-tab-button *ngIf="tipoUsuario === 'cliente' || tipoUsuario === 'invitado' || tipoUsuario === 'administrador'" [routerLink]="'/index'">
           <ion-icon name="home-outline"></ion-icon>
           <ion-label>Inicio</ion-label>
         </ion-tab-button>

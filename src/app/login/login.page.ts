@@ -63,9 +63,23 @@ export class LoginPage {
       this.router.navigate(['/index/cliente-index']);
     } else if (tipo === 'repartidor') {
       this.router.navigate(['/ordenes']);
+    } else if (tipo === 'invitado') {
+      this.router.navigate(['/index/cliente-index']);
     } else {
       this.router.navigate(['/login']);
     }
+  }
+    iniciarComoInvitado() {
+    const usuarioInvitado = {
+      id: 0,
+      nombre: 'Invitado',
+      tipo_usuario: 'invitado',
+    };
+
+
+    localStorage.setItem('usuario', JSON.stringify(usuarioInvitado));
+
+    this.router.navigate(['/index/cliente-index']);
   }
 
   private async mostrarToast(message: string, color: string) {
